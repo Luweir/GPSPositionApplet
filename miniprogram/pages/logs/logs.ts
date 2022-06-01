@@ -20,6 +20,19 @@ Page({
         var logs = wx.getStorageSync('logs') || []
         logs = []
         wx.setStorageSync('logs', logs)
-        wx.navigateTo({url:'../index/index'})
+        const fs = wx.getFileSystemManager()
+        fs.writeFileSync(`${wx.env.USER_DATA_PATH}/hello.txt`, '', 'utf8')
+        wx.navigateBack()
+    },
+    exportLog() {
+        wx.shareFileMessage({
+            filePath: `${wx.env.USER_DATA_PATH}/hello.txt`,
+            success() {
+                console.log("转发成功");
+            },
+            fail() {
+                console.log("转发失败");
+            },
+        })
     }
 })

@@ -54,16 +54,15 @@ Page({
         })
     },
     startLocation(e: any) {
-        if (this.data.timer == -1 && this.data.recodingPosition == false) {
-            this.process()
-        }
-        else {
-            clearInterval(this.data.timer)
-            this.setData({
-                timer: -1,
-                recodingPosition: false
-            })
-        }
+        this.process()
+    },
+    stopLocation() {
+        clearInterval(this.data.timer)
+        this.setData({
+            timer: -1,
+            recodingPosition: false
+        })
+        this.onLoad()
     },
     process() {
         // 每 5s 记录位置一次
@@ -72,9 +71,30 @@ Page({
             wx.getLocation({
                 type: 'gcj02',
                 success(res) {
-                    console.log(res.latitude);
-                    console.log(res.longitude);
-                    logs.unshift([new Date(Date.now()).toTimeString().slice(0, 8) + " > " + res.latitude.toFixed(4), res.longitude.toFixed(4)])
+                    let latitude = res.latitude
+                    let longitude = res.longitude
+                    console.log(latitude);
+                    console.log(longitude);
+                    let t = new Date(Date.now()).toTimeString().slice(0, 8)
+                    const fs = wx.getFileSystemManager()
+                    // 打开文件
+                    fs.open({
+                        filePath: `${wx.env.USER_DATA_PATH}/hello.txt`,
+                        flag: 'a+',
+                        success(res) {
+                            fs.write({
+                                fd: res.fd,
+                                data: "" + t + "," + longitude.toFixed(5) + "," + longitude.toFixed(5)+"\n",
+                                success(res) {
+                                    console.log(res.bytesWritten)
+                                }
+                            })
+                        },
+                        fail() {
+                            fs.writeFileSync(`${wx.env.USER_DATA_PATH}/hello.txt`, '', 'utf8')
+                        }
+                    })
+                    logs.unshift([t + "," + res.latitude.toFixed(5) + "," + res.longitude.toFixed(5)])
                     wx.setStorageSync('logs', logs)
                 }
             })

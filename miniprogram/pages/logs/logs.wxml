@@ -4,6 +4,7 @@
         <text class="log-item">{{index + 1}}. {{log.date}}</text>
     </block>
     <view>
-        <button bindtap="removeLog" type="default">清除日志</button>
+        <button bindtap="exportLog" type="default" style="margin-top: 20px;">导出数据</button>
+        <button bindtap="removeLog" type="default" style="margin-top: 10px;">清除数据</button>
     </view>
 </view>

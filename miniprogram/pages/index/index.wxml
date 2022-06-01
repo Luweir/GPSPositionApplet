@@ -21,10 +21,10 @@
     <text class="user-motto">{{motto}}</text>
   </view> -->
     <view style="margin-top: 100px;">
-        <button type="primary" bindtap="startLocation"> 开始定位
-        </button>
-        <button type="default" bindtap="watchLog" style="margin-top: 20px;">
-                查看日志
-        </button>
+        <button type="primary" bindtap="startLocation" wx:if="{{!recodingPosition}}"> 开始定位 </button>
+
+        <button type="primary" bindtap="stopLocation" wx:if="{{recodingPosition}}"> 结束定位 </button>
+
+        <button type="default" bindtap="watchLog" style="margin-top: 20px;"> 查看日志</button>
     </view>
 </view>
